@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diagnóstico Admin - SaaS Barbearia</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .section {
+        margin-bottom: 30px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .section h3 {
+        margin-top: 0;
+        color: #333;
+      }
+      .status {
+        padding: 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+      .info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+      input,
+      select {
+        padding: 8px;
+        margin: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .user-info {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 4px;
+        font-family: monospace;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔧 Diagnóstico de Acesso Admin</h1>
+      <p>
+        Esta ferramenta ajuda a diagnosticar problemas de login como
+        administrador.
+      </p>
+
+      <div class="section">
+        <h3>1. Estado da Autenticação</h3>
+        <div id="auth-status" class="status info">Verificando...</div>
+        <button onclick="checkAuth()">Verificar Autenticação</button>
+        <button onclick="logout()">Fazer Logout</button>
+      </div>
+
+      <div class="section">
+        <h3>2. Informações do Usuário</h3>
+        <div id="user-info" class="user-info">Nenhum usuário logado</div>
+      </div>
+
+      <div class="section">
+        <h3>3. Teste de Login</h3>
+        <input
+          type="email"
+          id="test-email"
+          placeholder="Email"
+          value="admin@barbearia.com"
+        />
+        <input
+          type="password"
+          id="test-password"
+          placeholder="Senha"
+          value="admin123"
+        />
+        <button onclick="testLogin()">Testar Login</button>
+        <div id="login-result" class="status"></div>
+      </div>
+
+      <div class="section">
+        <h3>4. Criar Usuário Admin (Teste)</h3>
+        <p>
+          <strong>Atenção:</strong> Use apenas para testes. Este usuário terá
+          role "MASTER".
+        </p>
+        <input
+          type="email"
+          id="create-email"
+          placeholder="Email para criar"
+          value="teste@admin.com"
+        />
+        <input
+          type="password"
+          id="create-password"
+          placeholder="Senha"
+          value="teste123"
+        />
+        <select id="create-role">
+          <option value="MASTER">MASTER</option>
+          <option value="ADMIN">ADMIN</option>
+        </select>
+        <button onclick="createTestUser()">Criar Usuário Teste</button>
+        <div id="create-result" class="status"></div>
+      </div>
+
+      <div class="section">
+        <h3>5. Ações Rápidas</h3>
+        <button onclick="openAdminPage()">Abrir Painel Admin</button>
+        <button onclick="clearCache()">Limpar Cache Local</button>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+        signOut,
+        onAuthStateChanged,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+      import {
+        getDatabase,
+        ref,
+        set,
+      } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+      // Configuração Firebase (mesma do projeto principal)
+      const firebaseConfig = {
+        apiKey: "AIzaSyDw28CcW-k1IZydJnNaO7APRjsUgGreZxM",
+        authDomain: "barbearia-agenda-7b0da.firebaseapp.com",
+        databaseURL:
+          "https://barbearia-agenda-7b0da-default-rtdb.firebaseio.com",
+        projectId: "barbearia-agenda-7b0da",
+        storageBucket: "barbearia-agenda-7b0da.firebasestorage.app",
+        messagingSenderId: "121528650976",
+        appId: "1:121528650976:web:b83c16c0846c7ad32ed485",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const database = getDatabase(app);
+
+      let currentUser = null;
+
+      // Verificar estado de autenticação
+      onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        updateAuthStatus();
+        updateUserInfo();
+      });
+
+      function updateAuthStatus() {
+        const statusEl = document.getElementById("auth-status");
+        if (currentUser) {
+          statusEl.className = "status success";
+          statusEl.textContent = `✅ Logado como: ${currentUser.email}`;
+        } else {
+          statusEl.className = "status warning";
+          statusEl.textContent = "❌ Nenhum usuário logado";
+        }
+      }
+
+      function updateUserInfo() {
+        const infoEl = document.getElementById("user-info");
+        if (currentUser) {
+          // Buscar dados adicionais do usuário
+          const userRef = ref(database, `users/${currentUser.uid}`);
+          import("https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js").then(
+            ({ get }) => {
+              get(userRef)
+                .then((snapshot) => {
+                  const userData = snapshot.val();
+                  infoEl.textContent = JSON.stringify(
+                    {
+                      uid: currentUser.uid,
+                      email: currentUser.email,
+                      emailVerified: currentUser.emailVerified,
+                      userData: userData || "Nenhum dado adicional encontrado",
+                    },
+                    null,
+                    2,
+                  );
+                })
+                .catch((error) => {
+                  infoEl.textContent = `Erro ao buscar dados: ${error.message}`;
+                });
+            },
+          );
+        } else {
+          infoEl.textContent = "Nenhum usuário logado";
+        }
+      }
+
+      window.checkAuth = function () {
+        updateAuthStatus();
+        updateUserInfo();
+      };
+
+      window.logout = async function () {
+        try {
+          await signOut(auth);
+          document.getElementById("auth-status").className = "status success";
+          document.getElementById("auth-status").textContent =
+            "✅ Logout realizado com sucesso";
+        } catch (error) {
+          document.getElementById("auth-status").className = "status error";
+          document.getElementById("auth-status").textContent =
+            `❌ Erro no logout: ${error.message}`;
+        }
+      };
+
+      window.testLogin = async function () {
+        const email = document.getElementById("test-email").value;
+        const password = document.getElementById("test-password").value;
+        const resultEl = document.getElementById("login-result");
+
+        if (!email || !password) {
+          resultEl.className = "status error";
+          resultEl.textContent = "❌ Preencha email e senha";
+          return;
+        }
+
+        try {
+          resultEl.className = "status info";
+          resultEl.textContent = "🔄 Fazendo login...";
+
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password,
+          );
+          const user = userCredential.user;
+
+          // Verificar role do usuário
+          const userRef = ref(database, `users/${user.uid}`);
+          const snapshot =
+            await import("https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js").then(
+              ({ get }) => get(userRef),
+            );
+
+          const userData = snapshot.val();
+
+          if (
+            userData &&
+            (userData.role === "ADMIN" || userData.role === "MASTER")
+          ) {
+            resultEl.className = "status success";
+            resultEl.textContent = `✅ Login bem-sucedido! Role: ${userData.role}`;
+          } else {
+            resultEl.className = "status warning";
+            resultEl.textContent = `⚠️ Login realizado, mas role inválida: ${userData?.role || "undefined"}. Esperado: ADMIN ou MASTER`;
+          }
+        } catch (error) {
+          resultEl.className = "status error";
+          resultEl.textContent = `❌ Erro no login: ${error.message}`;
+        }
+      };
+
+      window.createTestUser = async function () {
+        const email = document.getElementById("create-email").value;
+        const password = document.getElementById("create-password").value;
+        const role = document.getElementById("create-role").value;
+        const resultEl = document.getElementById("create-result");
+
+        if (!email || !password) {
+          resultEl.className = "status error";
+          resultEl.textContent = "❌ Preencha email e senha";
+          return;
+        }
+
+        try {
+          resultEl.className = "status info";
+          resultEl.textContent = "🔄 Criando usuário...";
+
+          // Criar usuário no Auth
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password,
+          );
+          const user = userCredential.user;
+
+          // Salvar dados do usuário no Database
+          const userRef = ref(database, `users/${user.uid}`);
+          await set(userRef, {
+            email: email,
+            role: role,
+            createdAt: new Date().toISOString(),
+            barbershopId: null, // Admin master pode gerenciar todas
+          });
+
+          resultEl.className = "status success";
+          resultEl.textContent = `✅ Usuário criado com sucesso! UID: ${user.uid}, Role: ${role}`;
+        } catch (error) {
+          resultEl.className = "status error";
+          resultEl.textContent = `❌ Erro ao criar usuário: ${error.message}`;
+        }
+      };
+
+      window.openAdminPage = function () {
+        window.open("admin.html", "_blank");
+      };
+
+      window.clearCache = function () {
+        if ("caches" in window) {
+          caches.keys().then((names) => {
+            names.forEach((name) => {
+              caches.delete(name);
+            });
+          });
+        }
+        localStorage.clear();
+        sessionStorage.clear();
+        alert("Cache limpo! Recarregue a página.");
+      };
+    </script>
+  </body>
+</html>

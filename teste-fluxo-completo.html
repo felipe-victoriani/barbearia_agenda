@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Fluxo Completo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #000;
+            color: #ffd700;
+        }
+        .test-section {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #333;
+        }
+        .btn {
+            background: #ffd700;
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        .btn:hover { background: #e6b800; }
+        .success { color: #25d366; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste do Fluxo Completo de Agendamento</h1>
+
+    <div class="test-section">
+        <h2>Fluxo Atual:</h2>
+        <ol>
+            <li>Cliente preenche formulário</li>
+            <li>Clica em "Confirmar Agendamento"</li>
+            <li><span class="success">Sistema salva no Firebase</span></li>
+            <li><span class="success">WhatsApp abre automaticamente com mensagem</span></li>
+            <li><span class="success">Cliente é redirecionado para index.html</span></li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>Simular Confirmação:</h2>
+        <button class="btn" onclick="simulateBooking()">
+            📱 Simular Agendamento Completo
+        </button>
+        <p>Este botão simula o que acontece quando o cliente confirma o agendamento.</p>
+    </div>
+
+    <script>
+        function simulateBooking() {
+            // Simula os dados de um agendamento
+            const appointments = [{
+                clientName: "João Silva",
+                clientPhone: "(11) 99999-9999",
+                date: "2026-02-15",
+                startMin: 840, // 14:00
+                serviceName: "Corte de Cabelo + Barba",
+                servicePrice: 50,
+                barbershopName: "Barbearia Teste",
+                barberName: "Carlos"
+            }];
+
+            // 1. Simula salvamento no Firebase (apenas log)
+            console.log("✅ Agendamento salvo no Firebase:", appointments);
+
+            // 2. Envia WhatsApp automaticamente
+            sendWhatsAppConfirmation(appointments);
+
+            // 3. Redireciona após delay (simulando processamento)
+            setTimeout(() => {
+                alert("✅ Agendamento concluído! Você seria redirecionado para a página inicial.");
+                // Em produção: window.location.href = 'index.html';
+            }, 2000);
+        }
+
+        function sendWhatsAppConfirmation(appointments) {
+            const firstAppointment = appointments[0];
+            const totalPrice = 50;
+            const servicesList = "Corte de Cabelo + Barba";
+
+            const whatsappMessage = encodeURIComponent(
+                `Olá ${firstAppointment.clientName}! 🎉\n\nSeu agendamento foi confirmado!\n\n📅 Data: 15/02/2026\n⏰ Horário: 14:00\n💇‍♂️ Serviços: ${servicesList}\n💰 Valor Total: R$ ${totalPrice},00\n🏪 Barbearia: ${firstAppointment.barbershopName}\n👨‍💼 Barbeiro: ${firstAppointment.barberName}\n\nObrigado por escolher nossos serviços!`
+            );
+
+            const whatsappUrl = `https://wa.me/55${firstAppointment.clientPhone.replace(/\D/g, "")}?text=${whatsappMessage}`;
+
+            console.log("📱 Abrindo WhatsApp com URL:", whatsappUrl);
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">c:\Users\felip\OneDrive\Desktop\felipe\SAAS_BARBEARIA\teste-fluxo-completo.html

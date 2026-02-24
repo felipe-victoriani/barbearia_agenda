@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicialização do Sistema</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="hero-section">
+        <h2>🔧 Inicialização do Sistema</h2>
+        <p>Esta página cria os usuários administradores padrão no sistema.</p>
+
+        <div id="init-status" class="init-status">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Inicializando usuários...</p>
+          </div>
+        </div>
+
+        <div id="init-result" class="init-result" style="display: none">
+          <h3>✅ Inicialização Concluída!</h3>
+          <div class="credentials-box">
+            <h4>📋 Credenciais de Acesso Administrativo:</h4>
+            <div class="credential-item">
+              <strong>Administrador Geral:</strong><br />
+              E-mail: <code>admin@barbearia.com</code><br />
+              Senha: <code>admin123</code><br />
+              <small>Pode gerenciar tudo no sistema</small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <a href="admin.html" class="btn btn-primary"
+              >🔐 Acessar Painel Admin</a
+            >
+            <a href="index.html" class="btn btn-secondary"
+              >🏠 Voltar ao Início</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeDefaultUsers } from "../js/initialize.js";
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          await initializeDefaultUsers();
+
+          document.getElementById("init-status").style.display = "none";
+          document.getElementById("init-result").style.display = "block";
+        } catch (error) {
+          console.error("Erro na inicialização:", error);
+          document.getElementById("init-status").innerHTML = `
+            <div style="color: #ef4444; text-align: center;">
+              <h3>❌ Erro na Inicialização</h3>
+              <p>${error.message}</p>
+              <a href="index.html" class="btn btn-secondary">🏠 Voltar ao Início</a>
+            </div>
+          `;
+        }
+      });
+    </script>
+  </body>
+</html>

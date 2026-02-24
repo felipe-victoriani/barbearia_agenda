@@ -1,0 +1,8 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" fill="#1f2937" rx="24"/>
+  <circle cx="96" cy="80" r="35" fill="#ffd700"/>
+  <path d="M96 45 L96 25 M96 135 L96 115 M45 80 L25 80 M167 80 L147 80" stroke="#ffd700" stroke-width="4" stroke-linecap="round"/>
+  <rect x="70" y="120" width="52" height="8" fill="#ffd700" rx="4"/>
+  <rect x="85" y="128" width="22" height="6" fill="#ffd700" rx="3"/>
+  <text x="96" y="175" text-anchor="middle" fill="#ffd700" font-family="Arial, sans-serif" font-size="12" font-weight="bold">BARBER</text>
+</svg>

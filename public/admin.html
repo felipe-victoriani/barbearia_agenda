@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3b82f6" />
+    <meta
+      name="description"
+      content="Painel administrativo do sistema de barbearias"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Barbearia Admin" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Painel Administrativo</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="../images/logo.png" />
+    <link rel="apple-touch-icon" href="../images/logo.png" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Tela de Login -->
+      <div id="login-screen" class="admin-screen">
+        <div class="login-box">
+          <h1>🔐 Área Administrativa</h1>
+          <form id="login-form" class="admin-form">
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" required />
+            </div>
+            <div class="form-group">
+              <label for="password">Senha</label>
+              <input type="password" id="password" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+            <div id="login-error" class="error-message"></div>
+          </form>
+          <a href="index.html" class="back-link">← Voltar ao início</a>
+        </div>
+      </div>
+
+      <!-- Dashboard Admin -->
+      <div id="admin-dashboard" class="admin-screen" style="display: none">
+        <header class="admin-header">
+          <div>
+            <h1>Painel Administrativo</h1>
+            <p id="user-info"></p>
+          </div>
+          <button id="logout-btn" class="btn btn-secondary">Sair</button>
+        </header>
+
+        <div class="admin-content">
+          <!-- Menu Lateral -->
+          <aside class="admin-sidebar">
+            <nav class="admin-nav">
+              <button class="nav-item active" data-section="agenda">
+                📅 Agenda do Dia
+              </button>
+              <button
+                class="nav-item"
+                data-section="barbershops"
+                id="nav-barbershops"
+              >
+                🏪 Barbearias
+              </button>
+              <button class="nav-item" data-section="services">
+                ✂️ Serviços
+              </button>
+              <button class="nav-item" data-section="barbers">
+                👨‍💼 Barbeiros
+              </button>
+              <button class="nav-item" data-section="availability">
+                🕐 Horários
+              </button>
+              <button class="nav-item" data-section="financial">
+                💰 Gestão Financeira
+              </button>
+            </nav>
+          </aside>
+
+          <!-- Conteúdo Principal -->
+          <main class="admin-main">
+            <!-- Seção: Agenda do Dia -->
+            <section id="section-agenda" class="admin-section active">
+              <div class="section-header">
+                <h2>Agenda do Dia</h2>
+                <div style="display: flex; gap: 15px; align-items: center">
+                  <select
+                    id="agenda-barbershop"
+                    style="
+                      padding: 10px;
+                      border: 1px solid #cbd5e1;
+                      border-radius: 8px;
+                      font-size: 14px;
+                      min-width: 200px;
+                    "
+                  >
+                    <option value="">Todas as barbearias</option>
+                  </select>
+                  <input type="date" id="agenda-date" class="date-picker" />
+                </div>
+              </div>
+              <div id="agenda-content" class="agenda-list"></div>
+            </section>
+
+            <!-- Seção: Barbearias (apenas MASTER) -->
+            <section id="section-barbershops" class="admin-section">
+              <div class="section-header">
+                <h2>Gerenciar Barbearias</h2>
+                <button class="btn btn-primary" id="add-barbershop-btn">
+                  + Nova Barbearia
+                </button>
+              </div>
+              <div id="barbershops-admin-list" class="admin-list"></div>
+            </section>
+
+            <!-- Seção: Serviços -->
+            <section id="section-services" class="admin-section">
+              <div class="section-header">
+                <h2>Gerenciar Serviços</h2>
+                <button class="btn btn-primary" id="add-service-btn">
+                  + Novo Serviço
+                </button>
+              </div>
+              <div id="services-admin-list" class="admin-list"></div>
+            </section>
+
+            <!-- Seção: Barbeiros -->
+            <section id="section-barbers" class="admin-section">
+              <div class="section-header">
+                <h2>Gerenciar Barbeiros</h2>
+                <button class="btn btn-primary" id="add-barber-btn">
+                  + Novo Barbeiro
+                </button>
+              </div>
+              <div id="barbers-admin-list" class="admin-list"></div>
+            </section>
+
+            <!-- Seção: Horários de Trabalho -->
+            <section id="section-availability" class="admin-section">
+              <div class="section-header">
+                <h2>Horários de Trabalho</h2>
+              </div>
+              <div id="availability-content"></div>
+            </section>
+
+            <!-- Seção: Gestão Financeira -->
+            <section id="section-financial" class="admin-section">
+              <div class="section-header">
+                <h2>Gestão Financeira</h2>
+                <div style="display: flex; gap: 15px; align-items: center">
+                  <select
+                    id="financial-barbershop"
+                    style="
+                      padding: 10px;
+                      border: 1px solid #cbd5e1;
+                      border-radius: 8px;
+                      font-size: 14px;
+                      min-width: 200px;
+                    "
+                  >
+                    <option value="">Todas as barbearias</option>
+                  </select>
+                  <select
+                    id="financial-period"
+                    style="
+                      padding: 10px;
+                      border: 1px solid #cbd5e1;
+                      border-radius: 8px;
+                      font-size: 14px;
+                      min-width: 150px;
+                    "
+                  >
+                    <option value="today">Hoje</option>
+                    <option value="week">Esta Semana</option>
+                    <option value="month" selected>Este Mês</option>
+                    <option value="custom">Período Personalizado</option>
+                  </select>
+                  <div id="custom-dates" style="display: none; gap: 10px">
+                    <input
+                      type="date"
+                      id="financial-start-date"
+                      class="date-picker"
+                      style="width: auto"
+                    />
+                    <input
+                      type="date"
+                      id="financial-end-date"
+                      class="date-picker"
+                      style="width: auto"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div id="financial-content" class="admin-list"></div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Genérico -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initAdminPage } from "../js/admin.js";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initAdminPage();
+
+        // Registra Service Worker para PWA
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("sw.js").catch(console.log);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3b82f6" />
+    <meta
+      name="description"
+      content="Sistema de agendamento online para barbearias"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Barbearia" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Barbearias - Agendamento Online</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="../images/logo.png" />
+    <link rel="apple-touch-icon" href="../images/logo.png" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="header-content">
+          <div class="logo-section">
+            <h1>
+              <img
+                src="../images/logo.png"
+                alt="Navalha e pente de barbear"
+                class="logo-image"
+              />
+              Barber Shop
+            </h1>
+            <p class="subtitle">Agendamento Online</p>
+          </div>
+          <a href="admin.html" class="admin-link" title="Área Administrativa"
+            >⚙️</a
+          >
+        </div>
+      </header>
+
+      <main class="main">
+        <div class="hero-section">
+          <h2>Escolha sua barbearia</h2>
+          <p>Agende seu horário com os melhores profissionais</p>
+        </div>
+
+        <div id="loading" class="loading">
+          <div class="spinner"></div>
+          <p>Carregando barbearias...</p>
+        </div>
+
+        <div id="barbershops-container" class="barbershops-grid"></div>
+
+        <div id="no-barbershops" class="no-data" style="display: none">
+          <p>Nenhuma barbearia disponível no momento.</p>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <p>&copy; Devsenvolvido por Carlos Felipe Lima Victoriani</p>
+      </footer>
+    </div>
+
+    <script type="module">
+      import { loadBarbershops } from "../js/barbershops.js";
+
+      // Carrega as barbearias ao carregar a página
+      document.addEventListener("DOMContentLoaded", async () => {
+        await loadBarbershops();
+
+        // Registra Service Worker para PWA
+        if ("serviceWorker" in navigator) {
+          try {
+            const registration =
+              await navigator.serviceWorker.register("sw.js");
+            console.log("Service Worker registrado:", registration);
+
+            // Verifica se há atualização disponível
+            registration.addEventListener("updatefound", () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener("statechange", () => {
+                if (
+                  newWorker.state === "installed" &&
+                  navigator.serviceWorker.controller
+                ) {
+                  // Nova versão disponível
+                  if (confirm("Nova versão disponível! Atualizar agora?")) {
+                    window.location.reload();
+                  }
+                }
+              });
+            });
+          } catch (error) {
+            console.log("Service Worker não suportado:", error);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,80 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+
+    "barbershops": {
+      ".read": true,
+
+      "$barbershopId": {
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'ADMIN' || root.child('users').child(auth.uid).child('role').val() === 'MASTER')",
+
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+
+        "active": {
+          ".validate": "newData.isBoolean()"
+        },
+
+        "services": {
+          "$serviceId": {
+            ".validate": "newData.hasChildren(['name', 'price', 'active'])",
+
+            "name": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+
+            "price": {
+              ".validate": "newData.isNumber() && newData.val() >= 0"
+            },
+
+            "active": {
+              ".validate": "newData.isBoolean()"
+            }
+          }
+        },
+
+        "barbers": {
+          "$barberId": {
+            ".validate": "newData.hasChildren(['name', 'active'])",
+
+            "name": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+
+            "active": {
+              ".validate": "newData.isBoolean()"
+            },
+
+            "availability": {
+              "$dayOfWeek": {
+                ".validate": "newData.hasChildren(['start', 'end', 'active'])"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "appointments": {
+      ".read": "auth != null",
+
+      "$barbershopId": {
+        "$date": {
+          "$barberId": {
+            "$startMin": {
+              ".write": "(!data.exists() && newData.exists()) || (auth != null && (root.child('users').child(auth.uid).child('role').val() === 'ADMIN' || root.child('users').child(auth.uid).child('role').val() === 'MASTER'))",
+              ".validate": "newData.hasChildren(['barbershopId', 'serviceId', 'barberId', 'date', 'startMin', 'endMin', 'clientName', 'clientPhone', 'status']) && (newData.child('status').val() === 'pending' || newData.child('status').val() === 'confirmed' || newData.child('status').val() === 'cancelled' || newData.child('status').val() === 'completed' || newData.child('status').val() === 'no_show')"
+            }
+          }
+        }
+      }
+    },
+
+    "users": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'ADMIN' || root.child('users').child(auth.uid).child('role').val() === 'MASTER')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'ADMIN' || root.child('users').child(auth.uid).child('role').val() === 'MASTER')"
+    }
+  }
+}

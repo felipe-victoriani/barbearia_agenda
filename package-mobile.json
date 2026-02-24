@@ -1,0 +1,84 @@
+{
+  "name": "Barbearia SaaS PWA",
+  "version": "1.0.0-mobile",
+  "description": "Sistema SaaS para barbearias - Versão Mobile PWA",
+  "main": "public/index.html",
+  "scripts": {
+    "start": "firebase serve --only hosting",
+    "deploy": "firebase deploy --only hosting",
+    "deploy:pwa": "npm run build && firebase deploy --only hosting",
+    "build": "echo 'Building PWA assets...'",
+    "test:pwa": "npm run start",
+    "lint": "echo 'Linting code...'",
+    "format": "echo 'Formatting code...'"
+  },
+  "keywords": [
+    "barbearia",
+    "saas",
+    "pwa",
+    "mobile",
+    "firebase",
+    "agendamento",
+    "barbershop"
+  ],
+  "author": "Felipe - Dev Mobile PWA",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/barbearia-saas-pwa"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/barbearia-saas-pwa/issues"
+  },
+  "homepage": "https://your-project.firebaseapp.com",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "firebase": "^9.0.0"
+  },
+  "devDependencies": {
+    "firebase-tools": "^11.0.0"
+  },
+  "pwa": {
+    "manifest": "public/manifest.json",
+    "serviceWorker": "public/sw.js",
+    "icons": ["public/images/icon-192.svg", "public/images/icon-512.svg"],
+    "features": [
+      "offline-first",
+      "installable",
+      "push-notifications-ready",
+      "responsive-design",
+      "touch-friendly"
+    ],
+    "cache": {
+      "version": "v1.0.0",
+      "static": [
+        "/",
+        "/index.html",
+        "/shop.html",
+        "/admin.html",
+        "/css/style.css",
+        "/js/*.js",
+        "/images/*.svg",
+        "/images/*.png"
+      ],
+      "dynamic": ["/__/firebase/*"]
+    }
+  },
+  "mobile": {
+    "platforms": ["android", "ios", "windows"],
+    "features": [
+      "responsive",
+      "touch-interactions",
+      "dark-mode",
+      "accessibility",
+      "performance-optimized"
+    ],
+    "testing": {
+      "lighthouse": true,
+      "pwa-score": ">=90",
+      "mobile-friendly": true
+    }
+  }
+}

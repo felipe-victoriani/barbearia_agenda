@@ -1,0 +1,353 @@
+{
+  "barbershops": {
+    "barber-centro": {
+      "name": "Barber Centro",
+      "active": true,
+      "serviceDuration": 30,
+      "interval": 20,
+      "services": {
+        "corte-masculino": {
+          "name": "Corte Masculino",
+          "price": 3500,
+          "active": true
+        },
+        "barba": {
+          "name": "Barba",
+          "price": 2500,
+          "active": true
+        },
+        "corte-barba": {
+          "name": "Corte + Barba",
+          "price": 5000,
+          "active": true
+        },
+        "sobrancelha": {
+          "name": "Sobrancelha",
+          "price": 1500,
+          "active": true
+        }
+      },
+      "barbers": {
+        "joao-silva": {
+          "name": "João Silva",
+          "active": true
+        },
+        "pedro-santos": {
+          "name": "Pedro Santos",
+          "active": true
+        },
+        "carlos-oliveira": {
+          "name": "Carlos Oliveira",
+          "active": true
+        }
+      },
+      "availability": {
+        "joao-silva": {
+          "1": {
+            "start": 540,
+            "end": 1080
+          },
+          "2": {
+            "start": 540,
+            "end": 1080
+          },
+          "3": {
+            "start": 540,
+            "end": 1080
+          },
+          "4": {
+            "start": 540,
+            "end": 1080
+          },
+          "5": {
+            "start": 540,
+            "end": 1080
+          },
+          "6": {
+            "start": 480,
+            "end": 780
+          }
+        },
+        "pedro-santos": {
+          "1": {
+            "start": 540,
+            "end": 1080
+          },
+          "2": {
+            "start": 540,
+            "end": 1080
+          },
+          "3": {
+            "start": 540,
+            "end": 1080
+          },
+          "4": {
+            "start": 540,
+            "end": 1080
+          },
+          "5": {
+            "start": 540,
+            "end": 1080
+          }
+        },
+        "carlos-oliveira": {
+          "2": {
+            "start": 600,
+            "end": 1020
+          },
+          "3": {
+            "start": 600,
+            "end": 1020
+          },
+          "4": {
+            "start": 600,
+            "end": 1020
+          },
+          "5": {
+            "start": 600,
+            "end": 1020
+          },
+          "6": {
+            "start": 480,
+            "end": 780
+          }
+        }
+      }
+    },
+    "barber-vila-nova": {
+      "name": "Barber Vila Nova",
+      "active": true,
+      "serviceDuration": 30,
+      "interval": 20,
+      "services": {
+        "corte-social": {
+          "name": "Corte Social",
+          "price": 4000,
+          "active": true
+        },
+        "corte-degrade": {
+          "name": "Corte Degradê",
+          "price": 4500,
+          "active": true
+        },
+        "barba-completa": {
+          "name": "Barba Completa",
+          "price": 3000,
+          "active": true
+        },
+        "pacote-premium": {
+          "name": "Pacote Premium (Corte + Barba + Sobrancelha)",
+          "price": 6500,
+          "active": true
+        }
+      },
+      "barbers": {
+        "roberto-lima": {
+          "name": "Roberto Lima",
+          "active": true
+        },
+        "marcos-ferreira": {
+          "name": "Marcos Ferreira",
+          "active": true
+        }
+      },
+      "availability": {
+        "roberto-lima": {
+          "1": {
+            "start": 480,
+            "end": 1020
+          },
+          "2": {
+            "start": 480,
+            "end": 1020
+          },
+          "3": {
+            "start": 480,
+            "end": 1020
+          },
+          "4": {
+            "start": 480,
+            "end": 1020
+          },
+          "5": {
+            "start": 480,
+            "end": 1020
+          },
+          "6": {
+            "start": 420,
+            "end": 720
+          }
+        },
+        "marcos-ferreira": {
+          "1": {
+            "start": 540,
+            "end": 1080
+          },
+          "2": {
+            "start": 540,
+            "end": 1080
+          },
+          "3": {
+            "start": 540,
+            "end": 1080
+          },
+          "4": {
+            "start": 540,
+            "end": 1080
+          },
+          "5": {
+            "start": 540,
+            "end": 1080
+          }
+        }
+      }
+    },
+    "elite-barbershop": {
+      "name": "Elite Barbershop",
+      "active": true,
+      "serviceDuration": 30,
+      "interval": 20,
+      "services": {
+        "corte-premium": {
+          "name": "Corte Premium",
+          "price": 6000,
+          "active": true
+        },
+        "barba-luxury": {
+          "name": "Barba Luxury",
+          "price": 4500,
+          "active": true
+        },
+        "tratamento-capilar": {
+          "name": "Tratamento Capilar",
+          "price": 8000,
+          "active": true
+        },
+        "combo-vip": {
+          "name": "Combo VIP Completo",
+          "price": 12000,
+          "active": true
+        }
+      },
+      "barbers": {
+        "andre-costa": {
+          "name": "André Costa",
+          "active": true
+        }
+      },
+      "availability": {
+        "andre-costa": {
+          "1": {
+            "start": 600,
+            "end": 1140
+          },
+          "2": {
+            "start": 600,
+            "end": 1140
+          },
+          "3": {
+            "start": 600,
+            "end": 1140
+          },
+          "4": {
+            "start": 600,
+            "end": 1140
+          },
+          "5": {
+            "start": 600,
+            "end": 1140
+          },
+          "6": {
+            "start": 540,
+            "end": 900
+          }
+        }
+      }
+    }
+  },
+  "users": {
+    "SUBSTITUA_PELO_UID_DO_USUARIO_MASTER": {
+      "email": "admin@barbershop.com",
+      "role": "MASTER",
+      "name": "Administrador Master"
+    }
+  },
+  "appointments": {
+    "barber-centro": {
+      "2026-02-14": {
+        "joao-silva": {
+          "600": {
+            "barbershopId": "barber-centro",
+            "barbershopName": "Barber Centro",
+            "serviceId": "corte-masculino",
+            "serviceName": "Corte Masculino",
+            "servicePrice": 3500,
+            "barberId": "joao-silva",
+            "barberName": "João Silva",
+            "date": "2026-02-14",
+            "startMin": 600,
+            "endMin": 630,
+            "clientName": "Carlos Eduardo Silva",
+            "clientPhone": "(11) 98765-4321",
+            "status": "confirmed",
+            "createdAt": 1739491200000
+          },
+          "700": {
+            "barbershopId": "barber-centro",
+            "barbershopName": "Barber Centro",
+            "serviceId": "corte-barba",
+            "serviceName": "Corte + Barba",
+            "servicePrice": 5000,
+            "barberId": "joao-silva",
+            "barberName": "João Silva",
+            "date": "2026-02-14",
+            "startMin": 700,
+            "endMin": 730,
+            "clientName": "Rafael Mendes",
+            "clientPhone": "(11) 97654-3210",
+            "status": "pending",
+            "createdAt": 1739494800000
+          }
+        },
+        "pedro-santos": {
+          "540": {
+            "barbershopId": "barber-centro",
+            "barbershopName": "Barber Centro",
+            "serviceId": "barba",
+            "serviceName": "Barba",
+            "servicePrice": 2500,
+            "barberId": "pedro-santos",
+            "barberName": "Pedro Santos",
+            "date": "2026-02-14",
+            "startMin": 540,
+            "endMin": 570,
+            "clientName": "Fernando Alves",
+            "clientPhone": "(11) 96543-2109",
+            "status": "confirmed",
+            "createdAt": 1739487600000
+          }
+        }
+      },
+      "2026-02-15": {
+        "joao-silva": {
+          "540": {
+            "barbershopId": "barber-centro",
+            "barbershopName": "Barber Centro",
+            "serviceId": "corte-masculino",
+            "serviceName": "Corte Masculino",
+            "servicePrice": 3500,
+            "barberId": "joao-silva",
+            "barberName": "João Silva",
+            "date": "2026-02-15",
+            "startMin": 540,
+            "endMin": 570,
+            "clientName": "Lucas Ferreira",
+            "clientPhone": "(11) 95432-1098",
+            "status": "pending",
+            "createdAt": 1739574000000
+          }
+        }
+      }
+    }
+  }
+}

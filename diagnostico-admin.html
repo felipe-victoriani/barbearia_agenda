@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diagnóstico de Login Admin</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .result {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        cursor: pointer;
+      }
+      input {
+        padding: 8px;
+        margin: 5px;
+        width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔍 Diagnóstico de Login Administrativo</h1>
+
+    <div id="results"></div>
+
+    <h2>Testar Login</h2>
+    <input
+      type="email"
+      id="test-email"
+      placeholder="E-mail do admin"
+      value="admin@barbershop.com"
+    />
+    <input type="password" id="test-password" placeholder="Senha" value="" />
+    <button onclick="testLogin()">Testar Login</button>
+
+    <h2>Verificar Usuário no Banco</h2>
+    <input type="text" id="user-uid" placeholder="UID do usuário" />
+    <button onclick="checkUserData()">Verificar Dados do Usuário</button>
+
+    <h2>Criar Usuário Admin (Temporário)</h2>
+    <p><strong>⚠️ Use apenas para desenvolvimento!</strong></p>
+    <input
+      type="email"
+      id="create-email"
+      placeholder="E-mail"
+      value="admin@teste.com"
+    />
+    <input
+      type="password"
+      id="create-password"
+      placeholder="Senha"
+      value="123456"
+    />
+    <button onclick="createTestUser()">Criar Usuário de Teste</button>
+
+    <script type="module">
+      import { auth, database } from "./js/firebase.js";
+      import {
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+      import {
+        ref,
+        get,
+        set,
+      } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+      const resultsDiv = document.getElementById("results");
+
+      function addResult(message, type = "info") {
+        const div = document.createElement("div");
+        div.className = `result ${type}`;
+        div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+        resultsDiv.appendChild(div);
+        resultsDiv.scrollTop = resultsDiv.scrollHeight;
+      }
+
+      window.testLogin = async function () {
+        const email = document.getElementById("test-email").value;
+        const password = document.getElementById("test-password").value;
+
+        try {
+          addResult(`Tentando login com ${email}...`, "warning");
+
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password,
+          );
+          const user = userCredential.user;
+
+          addResult(
+            `✅ Login no Firebase Authentication OK. UID: ${user.uid}`,
+            "success",
+          );
+
+          // Verificar dados no Realtime Database
+          const userRef = ref(database, `users/${user.uid}`);
+          const snapshot = await get(userRef);
+
+          if (snapshot.exists()) {
+            const userData = snapshot.val();
+            addResult(
+              `✅ Dados do usuário encontrados: ${JSON.stringify(userData)}`,
+              "success",
+            );
+
+            if (userData.role === "ADMIN" || userData.role === "MASTER") {
+              addResult(
+                `✅ Usuário tem role ${userData.role}. Login deve funcionar!`,
+                "success",
+              );
+            } else {
+              addResult(
+                `❌ Usuário não tem role válida. Role atual: ${userData.role}. Deve ser ADMIN ou MASTER.`,
+                "error",
+              );
+            }
+          } else {
+            addResult(
+              `❌ Usuário não encontrado no Realtime Database`,
+              "error",
+            );
+            addResult(
+              `💡 Você precisa criar os dados do usuário em users/${user.uid}`,
+              "warning",
+            );
+          }
+
+          await signOut(auth);
+          addResult(`✅ Logout realizado`, "success");
+        } catch (error) {
+          addResult(`❌ Erro no login: ${error.message}`, "error");
+        }
+      };
+
+      window.checkUserData = async function () {
+        const uid = document.getElementById("user-uid").value;
+
+        if (!uid) {
+          addResult("❌ Digite um UID válido", "error");
+          return;
+        }
+
+        try {
+          const userRef = ref(database, `users/${uid}`);
+          const snapshot = await get(userRef);
+
+          if (snapshot.exists()) {
+            const userData = snapshot.val();
+            addResult(
+              `✅ Dados do usuário: ${JSON.stringify(userData, null, 2)}`,
+              "success",
+            );
+          } else {
+            addResult(`❌ Usuário não encontrado no banco de dados`, "error");
+          }
+        } catch (error) {
+          addResult(`❌ Erro ao verificar dados: ${error.message}`, "error");
+        }
+      };
+
+      window.createTestUser = async function () {
+        const email = document.getElementById("create-email").value;
+        const password = document.getElementById("create-password").value;
+
+        try {
+          addResult(`Criando usuário de teste ${email}...`, "warning");
+
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password,
+          );
+          const user = userCredential.user;
+
+          addResult(
+            `✅ Usuário criado no Firebase Authentication. UID: ${user.uid}`,
+            "success",
+          );
+
+          // Criar dados no Realtime Database
+          const userData = {
+            email: email,
+            name: "Administrador de Teste",
+            role: "ADMIN",
+            barbershopId: null,
+            createdAt: new Date().toISOString(),
+          };
+
+          const userRef = ref(database, `users/${user.uid}`);
+          await set(userRef, userData);
+
+          addResult(
+            `✅ Dados do usuário criados no Realtime Database`,
+            "success",
+          );
+          addResult(
+            `🎉 Usuário admin criado com sucesso! Use ${email} / ${password} para logar`,
+            "success",
+          );
+
+          await signOut(auth);
+        } catch (error) {
+          addResult(`❌ Erro ao criar usuário: ${error.message}`, "error");
+        }
+      };
+
+      // Verificar conexão com Firebase
+      addResult("🔄 Verificando conexão com Firebase...", "warning");
+      get(ref(database, "barbershops"))
+        .then((snapshot) => {
+          addResult("✅ Conexão com Firebase OK", "success");
+        })
+        .catch((error) => {
+          addResult(
+            `❌ Erro de conexão com Firebase: ${error.message}`,
+            "error",
+          );
+        });
+    </script>
+  </body>
+</html>

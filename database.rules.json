@@ -1,0 +1,17 @@
+{
+  "rules": {
+    ".read": true,
+
+    "barbershops": {
+      ".write": "auth != null"
+    },
+
+    "appointments": {
+      ".write": "auth != null"
+    },
+
+    "users": {
+      ".write": "auth != null"
+    }
+  }
+}
