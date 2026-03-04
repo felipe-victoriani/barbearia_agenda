@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#3b82f6" />
+    <meta name="theme-color" content="#ffd700" />
     <meta
       name="description"
       content="Sistema de agendamento online para barbearias"
@@ -13,89 +13,198 @@
     <meta name="apple-mobile-web-app-title" content="Barbearia" />
     <meta name="mobile-web-app-capable" content="yes" />
     <title>Barbearias - Agendamento Online</title>
-    <link rel="stylesheet" href="../css/style.css" />
     <link rel="manifest" href="manifest.json" />
-    <link rel="icon" href="../images/logo.png" />
-    <link rel="apple-touch-icon" href="../images/logo.png" />
+    <link rel="icon" href="images/logo.png" />
+    <link rel="apple-touch-icon" href="images/logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              gold: { DEFAULT: "#ffd700", dark: "#ffc107" },
+            },
+            boxShadow: {
+              gold: "0 4px 20px rgba(255,215,0,0.25)",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <div class="container">
-      <header class="header">
-        <div class="header-content">
-          <div class="logo-section">
-            <h1>
-              <img
-                src="../images/logo.png"
-                alt="Navalha e pente de barbear"
-                class="logo-image"
-              />
-              Barber Shop
-            </h1>
-            <p class="subtitle">Agendamento Online</p>
+  <body class="bg-black text-yellow-400 min-h-screen">
+    <div x-data="barbershopsPage()" class="max-w-6xl mx-auto">
+      <!-- Header -->
+      <header
+        class="sticky top-0 z-10 bg-gradient-to-r from-zinc-900 to-black border-b-2 border-yellow-400"
+      >
+        <div class="flex justify-between items-center px-5 py-4">
+          <div class="flex items-center gap-3">
+            <img
+              src="images/logo.png"
+              alt="Logo"
+              class="w-12 h-12 rounded-full object-cover border-2 border-yellow-400"
+            />
+            <div>
+              <h1 class="text-xl font-bold text-yellow-400 leading-tight">
+                Barber Shop
+              </h1>
+              <p class="text-yellow-500 text-xs opacity-90">
+                Agendamento Online
+              </p>
+            </div>
           </div>
-          <a href="admin.html" class="admin-link" title="Área Administrativa"
-            >⚙️</a
+          <a
+            href="admin.html"
+            title="Área Administrativa"
+            class="text-2xl opacity-70 hover:opacity-100 hover:scale-110 transition-all p-2 rounded-lg hover:bg-white/10"
           >
+            ⚙️
+          </a>
         </div>
       </header>
 
-      <main class="main">
-        <div class="hero-section">
-          <h2>Escolha sua barbearia</h2>
-          <p>Agende seu horário com os melhores profissionais</p>
+      <main class="p-5">
+        <!-- Hero -->
+        <div
+          class="text-center py-10 px-5 bg-zinc-900 rounded-xl border border-zinc-700 mb-8"
+        >
+          <h2 class="text-3xl font-bold text-yellow-400 mb-3">
+            Escolha sua barbearia
+          </h2>
+          <p class="text-yellow-500 text-lg max-w-xl mx-auto">
+            Agende seu horário com os melhores profissionais
+          </p>
         </div>
 
-        <div id="loading" class="loading">
-          <div class="spinner"></div>
-          <p>Carregando barbearias...</p>
+        <!-- Loading -->
+        <div
+          x-show="loading"
+          x-transition
+          class="flex flex-col items-center py-16"
+        >
+          <div
+            class="w-12 h-12 border-4 border-zinc-700 border-t-yellow-400 rounded-full animate-spin mb-4"
+          ></div>
+          <p class="text-yellow-500">Carregando barbearias...</p>
         </div>
 
-        <div id="barbershops-container" class="barbershops-grid"></div>
+        <!-- Erro -->
+        <div x-show="!loading && error" x-transition class="text-center py-10">
+          <p class="text-red-400 text-xl mb-2">⚠️</p>
+          <p class="text-red-400" x-text="error"></p>
+        </div>
 
-        <div id="no-barbershops" class="no-data" style="display: none">
-          <p>Nenhuma barbearia disponível no momento.</p>
+        <!-- Nenhuma barbearia -->
+        <div
+          x-show="!loading && !error && shops.length === 0"
+          x-transition
+          class="text-center py-16 text-yellow-600"
+        >
+          <p class="text-5xl mb-4">✂️</p>
+          <p class="text-lg">Nenhuma barbearia disponível no momento.</p>
+        </div>
+
+        <!-- Grid de Barbearias -->
+        <div
+          x-show="!loading && shops.length > 0"
+          x-transition
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8"
+        >
+          <template x-for="shop in shops" :key="shop.id">
+            <div
+              @click="goto(shop.id)"
+              class="bg-zinc-900 rounded-xl p-6 border-2 border-zinc-700 hover:border-yellow-400 hover:shadow-[0_4px_20px_rgba(255,215,0,0.2)] cursor-pointer transition-all duration-300 hover:-translate-y-1"
+            >
+              <h3
+                class="text-xl font-bold text-yellow-400 mb-4"
+                x-text="shop.name"
+              ></h3>
+              <div class="flex flex-col gap-2 text-yellow-500 text-sm">
+                <span
+                  >✂️ <span x-text="countItems(shop.services, 'serviço')"></span
+                ></span>
+                <span
+                  >👨‍💼 <span x-text="countItems(shop.barbers, 'barbeiro')"></span
+                ></span>
+                <span
+                  >⏱️ Duração:
+                  <span x-text="(shop.serviceDuration || 30) + ' min'"></span
+                ></span>
+                <span class="text-yellow-400 font-semibold mt-1"
+                  >📍 Clique para agendar</span
+                >
+              </div>
+            </div>
+          </template>
         </div>
       </main>
 
-      <footer class="footer">
-        <p>&copy; Devsenvolvido por Carlos Felipe Lima Victoriani</p>
+      <footer
+        class="text-center py-5 text-yellow-700 border-t border-zinc-800 text-sm"
+      >
+        <p>&copy; Desenvolvido em grupo</p>
       </footer>
     </div>
 
     <script type="module">
-      import { loadBarbershops } from "../js/barbershops.js";
+      import { getAllBarbershops } from "./js/barbershops.js";
 
-      // Carrega as barbearias ao carregar a página
-      document.addEventListener("DOMContentLoaded", async () => {
-        await loadBarbershops();
+      // Expõe dados para o Alpine.js
+      window.barbershopsPage = () => ({
+        loading: true,
+        shops: [],
+        error: null,
 
-        // Registra Service Worker para PWA
-        if ("serviceWorker" in navigator) {
+        async init() {
           try {
-            const registration =
-              await navigator.serviceWorker.register("sw.js");
-            console.log("Service Worker registrado:", registration);
-
-            // Verifica se há atualização disponível
-            registration.addEventListener("updatefound", () => {
-              const newWorker = registration.installing;
-              newWorker.addEventListener("statechange", () => {
-                if (
-                  newWorker.state === "installed" &&
-                  navigator.serviceWorker.controller
-                ) {
-                  // Nova versão disponível
-                  if (confirm("Nova versão disponível! Atualizar agora?")) {
-                    window.location.reload();
-                  }
-                }
-              });
-            });
-          } catch (error) {
-            console.log("Service Worker não suportado:", error);
+            const data = await getAllBarbershops();
+            this.shops = Object.entries(data)
+              .filter(([_, d]) => d.active !== false)
+              .map(([id, d]) => ({ id, ...d }));
+          } catch (e) {
+            this.error = "Erro ao carregar barbearias. Verifique sua conexão.";
+            console.error(e);
+          } finally {
+            this.loading = false;
           }
-        }
+        },
+
+        goto(id) {
+          window.location.href = `shop.html?slug=${id}`;
+        },
+
+        countItems(obj, label) {
+          const n = obj ? Object.keys(obj).length : 0;
+          return `${n} ${label}${n !== 1 ? "s" : ""}`;
+        },
       });
+
+      // Registra Service Worker para PWA
+      if ("serviceWorker" in navigator) {
+        try {
+          const reg = await navigator.serviceWorker.register("sw.js");
+          reg.addEventListener("updatefound", () => {
+            const w = reg.installing;
+            w.addEventListener("statechange", () => {
+              if (
+                w.state === "installed" &&
+                navigator.serviceWorker.controller
+              ) {
+                if (confirm("Nova versão disponível! Atualizar agora?"))
+                  window.location.reload();
+              }
+            });
+          });
+        } catch (e) {
+          console.log("SW não suportado:", e);
+        }
+      }
     </script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"
+    ></script>
   </body>
 </html>

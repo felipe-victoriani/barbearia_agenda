@@ -20,9 +20,9 @@ export async function loadBarbershops() {
   try {
     const barbershops = await getAllBarbershops();
 
-    // Filtra apenas barbearias ativas
+    // Filtra apenas barbearias ativas (exibe tudo que não foi explicitamente desativado)
     const activeBarbershops = Object.entries(barbershops)
-      .filter(([_, data]) => data.active === true)
+      .filter(([_, data]) => data.active !== false)
       .map(([id, data]) => ({ id, ...data }));
 
     loadingEl.style.display = "none";

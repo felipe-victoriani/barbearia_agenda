@@ -3,86 +3,151 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#3b82f6" />
+    <meta name="theme-color" content="#ffd700" />
     <meta name="description" content="Agende seu horário na barbearia" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Barbearia" />
     <meta name="mobile-web-app-capable" content="yes" />
     <title>Agendar Horário</title>
-    <link rel="stylesheet" href="../css/style.css" />
     <link rel="manifest" href="manifest.json" />
-    <link rel="icon" href="../images/logo.png" />
-    <link rel="apple-touch-icon" href="../images/logo.png" />
+    <link rel="icon" href="images/logo.png" />
+    <link rel="apple-touch-icon" href="images/logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <div class="container">
-      <header class="header">
-        <a href="index.html" class="back-link">← Voltar</a>
-        <h1 id="shop-name">Carregando...</h1>
+  <body class="bg-black text-yellow-400 min-h-screen">
+    <div class="max-w-3xl mx-auto">
+      <!-- Header -->
+      <header
+        class="sticky top-0 z-10 bg-gradient-to-r from-zinc-900 to-black border-b-2 border-yellow-400"
+      >
+        <div class="flex items-center gap-4 px-5 py-4">
+          <a
+            href="index.html"
+            class="text-yellow-400 font-bold px-3 py-1.5 border-2 border-yellow-400 rounded-lg hover:bg-yellow-400 hover:text-black transition-all text-sm"
+          >
+            ← Voltar
+          </a>
+          <h1 id="shop-name" class="text-lg font-bold text-yellow-400 truncate">
+            Carregando...
+          </h1>
+        </div>
       </header>
 
-      <main class="main">
-        <div id="loading" class="loading">
-          <div class="spinner"></div>
-          <p>Carregando informações...</p>
+      <main class="p-5">
+        <!-- Loading -->
+        <div id="loading" class="flex flex-col items-center py-20">
+          <div
+            class="w-12 h-12 border-4 border-zinc-700 border-t-yellow-400 rounded-full animate-spin mb-4"
+          ></div>
+          <p class="text-yellow-500">Carregando informações...</p>
         </div>
 
-        <div
-          id="booking-container"
-          class="booking-container"
-          style="display: none"
-        >
-          <!-- Seleção de Serviço -->
-          <section class="booking-section">
-            <h2>1. Escolha o Serviço</h2>
-            <div id="services-list" class="services-list"></div>
+        <!-- Booking Container (gerenciado por appointments.js) -->
+        <div id="booking-container" class="space-y-5" style="display: none">
+          <!-- 1. Serviços -->
+          <section
+            class="bg-zinc-900 rounded-xl p-6 border-l-4 border-t border-yellow-400 border-zinc-700"
+          >
+            <h2
+              class="text-yellow-400 font-bold text-lg mb-5 pb-3 border-b border-zinc-700"
+            >
+              1. Escolha o Serviço
+            </h2>
+            <div id="services-list"></div>
           </section>
 
-          <!-- Seleção de Data -->
-          <section class="booking-section">
-            <h2>2. Escolha a Data</h2>
-            <input type="date" id="date-picker" class="date-picker" />
+          <!-- 2. Data -->
+          <section
+            class="bg-zinc-900 rounded-xl p-6 border-l-4 border-t border-yellow-400 border-zinc-700"
+          >
+            <h2
+              class="text-yellow-400 font-bold text-lg mb-5 pb-3 border-b border-zinc-700"
+            >
+              2. Escolha a Data
+            </h2>
+            <input
+              type="date"
+              id="date-picker"
+              class="w-full px-4 py-3 bg-black border-2 border-zinc-700 rounded-lg text-yellow-400 focus:outline-none focus:border-yellow-400 transition-colors text-base"
+            />
           </section>
 
-          <!-- Seleção de Barbeiro -->
-          <section class="booking-section">
-            <h2>3. Escolha o Barbeiro</h2>
-            <div id="barbers-list" class="barbers-list"></div>
+          <!-- 3. Barbeiro -->
+          <section
+            class="bg-zinc-900 rounded-xl p-6 border-l-4 border-t border-yellow-400 border-zinc-700"
+          >
+            <h2
+              class="text-yellow-400 font-bold text-lg mb-5 pb-3 border-b border-zinc-700"
+            >
+              3. Escolha o Barbeiro
+            </h2>
+            <div id="barbers-list"></div>
           </section>
 
-          <!-- Seleção de Horário -->
-          <section class="booking-section">
-            <h2>4. Escolha o Horário</h2>
-            <div id="slots-loading" class="loading-small" style="display: none">
-              <div class="spinner-small"></div>
-              <p>Carregando horários...</p>
+          <!-- 4. Horário -->
+          <section
+            class="bg-zinc-900 rounded-xl p-6 border-l-4 border-t border-yellow-400 border-zinc-700"
+          >
+            <h2
+              class="text-yellow-400 font-bold text-lg mb-5 pb-3 border-b border-zinc-700"
+            >
+              4. Escolha o Horário
+            </h2>
+            <div
+              id="slots-loading"
+              class="flex items-center gap-3 py-4"
+              style="display: none"
+            >
+              <div
+                class="w-6 h-6 border-3 border-zinc-700 border-t-yellow-400 rounded-full animate-spin"
+              ></div>
+              <p class="text-yellow-500 text-sm">Carregando horários...</p>
             </div>
             <div id="slots-list" class="slots-list"></div>
           </section>
 
-          <!-- Dados do Cliente -->
-          <section class="booking-section">
-            <h2>5. Seus Dados</h2>
-            <form id="booking-form" class="booking-form">
-              <div class="form-group">
-                <label for="client-name">Nome Completo *</label>
-                <input type="text" id="client-name" required />
+          <!-- 5. Dados do Cliente -->
+          <section
+            class="bg-zinc-900 rounded-xl p-6 border-l-4 border-t border-yellow-400 border-zinc-700"
+          >
+            <h2
+              class="text-yellow-400 font-bold text-lg mb-5 pb-3 border-b border-zinc-700"
+            >
+              5. Seus Dados
+            </h2>
+            <form id="booking-form" class="space-y-5">
+              <div class="flex flex-col gap-2">
+                <label
+                  for="client-name"
+                  class="font-bold text-yellow-400 text-sm"
+                  >Nome Completo *</label
+                >
+                <input
+                  type="text"
+                  id="client-name"
+                  required
+                  class="px-4 py-3 bg-black border-2 border-zinc-700 rounded-lg text-yellow-400 focus:outline-none focus:border-yellow-400 transition-colors"
+                />
               </div>
-              <div class="form-group">
-                <label for="client-phone">Telefone/WhatsApp *</label>
+              <div class="flex flex-col gap-2">
+                <label
+                  for="client-phone"
+                  class="font-bold text-yellow-400 text-sm"
+                  >Telefone/WhatsApp *</label
+                >
                 <input
                   type="tel"
                   id="client-phone"
                   required
                   placeholder="(99) 99999-9999"
+                  class="px-4 py-3 bg-black border-2 border-zinc-700 rounded-lg text-yellow-400 focus:outline-none focus:border-yellow-400 transition-colors placeholder:text-zinc-600"
                 />
               </div>
               <button
                 type="submit"
-                class="btn btn-primary"
                 id="submit-btn"
                 disabled
+                class="w-full py-4 bg-yellow-400 text-black font-bold text-lg rounded-xl hover:bg-yellow-300 transition-all shadow-lg disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-yellow-400 disabled:hover:transform-none"
               >
                 Confirmar Agendamento
               </button>
@@ -91,19 +156,18 @@
         </div>
       </main>
 
-      <footer class="footer">
+      <footer
+        class="text-center py-5 text-yellow-700 border-t border-zinc-800 text-sm mt-4"
+      >
         <p>&copy; 2026 Sistema de Agendamento para Barbearias</p>
       </footer>
     </div>
 
     <script type="module">
-      import { initShopPage } from "../js/appointments.js";
+      import { initShopPage } from "./js/appointments.js";
 
-      // Inicializa a página de agendamento
       document.addEventListener("DOMContentLoaded", () => {
         initShopPage();
-
-        // Registra Service Worker para PWA
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.register("sw.js").catch(console.log);
         }

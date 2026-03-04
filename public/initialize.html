@@ -3,66 +3,122 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffd700" />
     <title>Inicialização do Sistema</title>
-    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="icon" href="images/logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <div class="container">
-      <div class="hero-section">
-        <h2>🔧 Inicialização do Sistema</h2>
-        <p>Esta página cria os usuários administradores padrão no sistema.</p>
+  <body
+    class="bg-black text-yellow-400 min-h-screen flex items-center justify-center p-5"
+  >
+    <div
+      x-data="initPage()"
+      class="max-w-lg w-full bg-zinc-900 rounded-xl border border-zinc-700 p-8"
+    >
+      <h2 class="text-2xl font-bold text-yellow-400 text-center mb-2">
+        🔧 Inicialização do Sistema
+      </h2>
+      <p class="text-yellow-600 text-center text-sm mb-8">
+        Esta página cria os usuários administradores padrão no sistema.
+      </p>
 
-        <div id="init-status" class="init-status">
-          <div class="loading">
-            <div class="spinner"></div>
-            <p>Inicializando usuários...</p>
+      <!-- Loading -->
+      <div
+        x-show="status === 'loading'"
+        class="flex flex-col items-center py-8"
+      >
+        <div
+          class="w-10 h-10 border-4 border-zinc-700 border-t-yellow-400 rounded-full animate-spin mb-4"
+        ></div>
+        <p class="text-yellow-500">Inicializando usuários...</p>
+      </div>
+
+      <!-- Sucesso -->
+      <div x-show="status === 'success'" x-transition>
+        <h3 class="text-xl font-bold text-yellow-400 text-center mb-6">
+          ✅ Inicialização Concluída!
+        </h3>
+        <div class="bg-zinc-800 rounded-xl border border-zinc-600 p-5 mb-6">
+          <h4 class="font-bold text-yellow-400 mb-4">
+            📋 Credenciais de Acesso Administrativo:
+          </h4>
+          <div
+            class="bg-yellow-400/10 border border-yellow-400/50 rounded-lg p-4"
+          >
+            <p class="font-bold text-yellow-400 mb-3">Administrador Geral:</p>
+            <p class="text-yellow-500 text-sm">
+              E-mail:
+              <code
+                class="bg-black text-yellow-400 px-2 py-0.5 rounded font-mono"
+                >admin@barbearia.com</code
+              >
+            </p>
+            <p class="text-yellow-500 text-sm mt-2">
+              Senha:
+              <code
+                class="bg-black text-yellow-400 px-2 py-0.5 rounded font-mono"
+                >admin123</code
+              >
+            </p>
+            <p class="text-yellow-700 text-xs mt-3">
+              Pode gerenciar tudo no sistema
+            </p>
           </div>
         </div>
-
-        <div id="init-result" class="init-result" style="display: none">
-          <h3>✅ Inicialização Concluída!</h3>
-          <div class="credentials-box">
-            <h4>📋 Credenciais de Acesso Administrativo:</h4>
-            <div class="credential-item">
-              <strong>Administrador Geral:</strong><br />
-              E-mail: <code>admin@barbearia.com</code><br />
-              Senha: <code>admin123</code><br />
-              <small>Pode gerenciar tudo no sistema</small>
-            </div>
-          </div>
-
-          <div class="actions">
-            <a href="admin.html" class="btn btn-primary"
-              >🔐 Acessar Painel Admin</a
-            >
-            <a href="index.html" class="btn btn-secondary"
-              >🏠 Voltar ao Início</a
-            >
-          </div>
+        <div class="flex gap-3">
+          <a
+            href="admin.html"
+            class="flex-1 py-3 bg-yellow-400 text-black font-bold text-center rounded-xl hover:bg-yellow-300 transition-all text-sm"
+          >
+            🔐 Acessar Painel Admin
+          </a>
+          <a
+            href="index.html"
+            class="flex-1 py-3 bg-zinc-800 text-yellow-400 font-bold text-center rounded-xl border border-zinc-600 hover:bg-zinc-700 transition-all text-sm"
+          >
+            🏠 Voltar ao Início
+          </a>
         </div>
+      </div>
+
+      <!-- Erro -->
+      <div x-show="status === 'error'" x-transition class="text-center">
+        <p class="text-5xl mb-4">❌</p>
+        <h3 class="text-xl font-bold text-red-400 mb-3">
+          Erro na Inicialização
+        </h3>
+        <p class="text-red-300 text-sm mb-6" x-text="errorMsg"></p>
+        <a
+          href="index.html"
+          class="inline-block py-3 px-6 bg-zinc-800 text-yellow-400 font-bold rounded-xl border border-zinc-600 hover:bg-zinc-700 transition-all"
+        >
+          🏠 Voltar ao Início
+        </a>
       </div>
     </div>
 
     <script type="module">
-      import { initializeDefaultUsers } from "../js/initialize.js";
+      import { initializeDefaultUsers } from "./js/initialize.js";
 
-      document.addEventListener("DOMContentLoaded", async () => {
-        try {
-          await initializeDefaultUsers();
-
-          document.getElementById("init-status").style.display = "none";
-          document.getElementById("init-result").style.display = "block";
-        } catch (error) {
-          console.error("Erro na inicialização:", error);
-          document.getElementById("init-status").innerHTML = `
-            <div style="color: #ef4444; text-align: center;">
-              <h3>❌ Erro na Inicialização</h3>
-              <p>${error.message}</p>
-              <a href="index.html" class="btn btn-secondary">🏠 Voltar ao Início</a>
-            </div>
-          `;
-        }
+      window.initPage = () => ({
+        status: "loading",
+        errorMsg: "",
+        async init() {
+          try {
+            await initializeDefaultUsers();
+            this.status = "success";
+          } catch (e) {
+            console.error(e);
+            this.status = "error";
+            this.errorMsg = e.message;
+          }
+        },
       });
     </script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"
+    ></script>
   </body>
 </html>

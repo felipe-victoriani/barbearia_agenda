@@ -512,11 +512,14 @@ async function handleBookingSubmit(e) {
     // Verifica se há tempo suficiente até o fim do expediente
     const date = new Date(state.selectedDate + "T00:00:00");
     const dayOfWeek = date.getDay();
-    const availability = await getBarberAvailability(
+    const availabilityData = await getBarberAvailability(
       state.slug,
       state.selectedBarber.id,
       dayOfWeek,
     );
+
+    // Extrai períodos da estrutura retornada (pode ser { periods: [...] } ou array direto)
+    const availability = availabilityData?.periods || availabilityData || [];
 
     // Verifica se o horário cabe em algum período disponível
     const slotStart = state.selectedSlot;

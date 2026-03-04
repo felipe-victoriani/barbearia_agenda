@@ -30,190 +30,6 @@ body {
   line-height: 1.6;
 }
 
-/* Hero Section */
-.hero-section {
-  text-align: center;
-  padding: 40px 20px;
-  background: var(--card-bg);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  margin-bottom: 30px;
-  border: 1px solid var(--border);
-}
-
-.hero-section h2 {
-  font-size: 2.2rem;
-  color: var(--text);
-  margin-bottom: 10px;
-  font-weight: 700;
-}
-
-.hero-section p {
-  color: var(--text-light);
-  font-size: 1.1rem;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Header */
-.header {
-  background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-  box-shadow: var(--shadow);
-  margin-bottom: 20px;
-  border-radius: 0;
-  padding: 0;
-  border-bottom: 2px solid var(--primary);
-}
-
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo-section h1 {
-  font-size: 1.8rem;
-  color: var(--secondary);
-  margin-bottom: 2px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.logo-section .subtitle {
-  color: var(--secondary);
-  font-size: 0.9rem;
-  opacity: 0.9;
-  margin-bottom: 0;
-}
-
-.admin-link {
-  color: var(--secondary);
-  text-decoration: none;
-  font-size: 1.5rem;
-  padding: 8px;
-  border-radius: 6px;
-  transition: all 0.3s;
-  opacity: 0.7;
-}
-
-.admin-link:hover {
-  background: rgba(255, 255, 255, 0.1);
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-.back-link {
-  color: var(--primary);
-  text-decoration: none;
-  font-size: 1.2rem;
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 2px solid var(--primary);
-  background: rgba(255, 215, 0, 0.1);
-}
-
-.back-link:hover {
-  background: var(--primary);
-  color: var(--bg);
-  transform: translateX(-2px);
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-}
-
-/* Inicialização */
-.credentials-box {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 20px;
-  margin: 20px 0;
-}
-
-.credential-item {
-  background: rgba(255, 215, 0, 0.1);
-  border: 1px solid var(--primary);
-  border-radius: 6px;
-  padding: 15px;
-  margin-bottom: 15px;
-}
-
-.credential-item:last-child {
-  margin-bottom: 0;
-}
-
-.credential-item code {
-  background: var(--bg);
-  color: var(--primary);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-family: "Courier New", monospace;
-}
-
-.init-result h3 {
-  color: var(--success);
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.init-result .actions {
-  text-align: center;
-  margin-top: 30px;
-}
-
-.init-result .actions .btn {
-  margin: 0 10px;
-}
-
-/* Footer Links */
-.footer-links {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 10px;
-}
-
-.footer-link {
-  color: var(--primary);
-  text-decoration: none;
-  font-size: 0.9rem;
-  padding: 5px 10px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  border: 1px solid var(--primary);
-}
-
-.footer-link:hover {
-  background: var(--primary);
-  color: var(--bg);
-}
-
-/* Loading */
-.loading {
-  text-align: center;
-  padding: 60px 20px;
-}
-
-.loading-small {
-  text-align: center;
-  padding: 20px;
-}
-
 .spinner,
 .spinner-small {
   width: 50px;
@@ -235,82 +51,6 @@ body {
   to {
     transform: rotate(360deg);
   }
-}
-
-/* Grid de Barbearias */
-.barbershops-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.barbershop-card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: var(--shadow);
-  transition:
-    transform 0.3s,
-    box-shadow 0.3s;
-  cursor: pointer;
-  border: 2px solid transparent;
-}
-
-.barbershop-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--primary);
-  background: linear-gradient(135deg, var(--card-bg) 0%, #2a2a2a 100%);
-}
-
-.barbershop-card:hover h3 {
-  color: var(--primary);
-}
-
-.barbershop-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  color: var(--text);
-}
-
-.barbershop-info {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: var(--text-light);
-  font-size: 0.95rem;
-}
-
-.barbershop-info span {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Booking Container */
-.booking-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.booking-section {
-  background: var(--card-bg);
-  border-radius: 12px;
-  padding: 25px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow);
-  border-left: 4px solid var(--primary);
-  border-top: 3px solid var(--primary);
-}
-
-.booking-section h2 {
-  font-size: 1.3rem;
-  margin-bottom: 20px;
-  color: var(--primary);
-  border-bottom: 2px solid var(--border);
-  padding-bottom: 10px;
-  font-weight: 700;
 }
 
 /* Services List */
@@ -935,45 +675,8 @@ body {
   color: var(--text-light);
 }
 
-/* Footer */
-.footer {
-  text-align: center;
-  padding: 30px 20px;
-  background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-  color: var(--text);
-  font-size: 0.9rem;
-  margin-top: 40px;
-  border-radius: 12px 12px 0 0;
-  border-top: 2px solid var(--primary);
-}
-
 /* Responsive */
 @media (max-width: 768px) {
-  .header-content {
-    padding: 12px 15px;
-  }
-
-  .logo-section h1 {
-    font-size: 1.5rem;
-  }
-
-  .logo-image {
-    width: 40px;
-    height: 40px;
-  }
-
-  .hero-section {
-    padding: 30px 15px;
-  }
-
-  .hero-section h2 {
-    font-size: 1.8rem;
-  }
-
-  .barbershops-grid {
-    grid-template-columns: 1fr;
-  }
-
   .slots-list {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
@@ -1189,49 +892,9 @@ body {
     max-width: 100%;
   }
 
-  /* Header responsivo */
-  .header {
-    padding: 15px 10px;
-  }
+  /* Header responsivo - removido (Tailwind) */
 
-  .header-content {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
-  }
-
-  .logo-section h1 {
-    font-size: 1.8rem;
-  }
-
-  .logo-image {
-    width: 40px;
-    height: 40px;
-  }
-
-  /* Hero section mobile */
-  .hero-section {
-    padding: 20px 15px;
-    margin-bottom: 20px;
-  }
-
-  .hero-section h2 {
-    font-size: 1.8rem;
-  }
-
-  /* Cards de barbearia */
-  .barbershop-card {
-    padding: 15px;
-    margin-bottom: 15px;
-  }
-
-  .barbershop-card h3 {
-    font-size: 1.3rem;
-  }
-
-  .barbershop-card p {
-    font-size: 0.9rem;
-  }
+  /* Hero section mobile - removido (Tailwind) */
 
   /* Botões */
   .btn {
@@ -1345,10 +1008,6 @@ body {
   }
 
   /* Shop page mobile */
-  .booking-section {
-    padding: 15px;
-  }
-
   .services-grid {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -1380,27 +1039,11 @@ body {
     font-size: 0.85rem;
   }
 
-  /* Footer mobile */
-  .footer {
-    padding: 15px;
-    text-align: center;
-  }
-
-  .footer p {
-    font-size: 0.8rem;
-  }
+  /* Footer mobile - removido (Tailwind) */
 }
 
 /* Media Queries para telas muito pequenas */
 @media (max-width: 480px) {
-  .hero-section h2 {
-    font-size: 1.5rem;
-  }
-
-  .barbershop-card h3 {
-    font-size: 1.1rem;
-  }
-
   .modal-content {
     margin: 5px;
     padding: 15px;
@@ -1435,8 +1078,7 @@ body {
   .btn,
   .service-item,
   .barber-item,
-  .slot-item,
-  .barbershop-card {
+  .slot-item {
     min-height: 44px;
   }
 

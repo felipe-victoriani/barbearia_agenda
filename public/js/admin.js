@@ -1228,53 +1228,84 @@ async function loadAvailabilityAdmin() {
 
   try {
     const barbershops = await getAllBarbershops();
-
-    // Selecione a primeira barbearia disponível
     const barbershopSlugs = Object.keys(barbershops);
+
     if (barbershopSlugs.length === 0) {
       container.innerHTML =
         '<p style="color: #64748b; text-align: center; padding: 40px;">Nenhuma barbearia cadastrada.</p>';
       return;
     }
 
-    // Para simplificar, vamos gerenciar a primeira barbearia
-    const selectedBarbershopSlug = barbershopSlugs[0];
-    adminState.managedBarbershopId = selectedBarbershopSlug;
-    const barbershop = barbershops[selectedBarbershopSlug];
-
-    // Obter barbeiros da barbearia
-    const barbers = barbershop.barbers || {};
-    const barberList = Object.entries(barbers)
-      .filter(([_, data]) => data.active !== false)
-      .map(([id, data]) => ({ id, ...data }));
-
-    if (barberList.length === 0) {
-      container.innerHTML =
-        '<p style="color: #64748b; text-align: center; padding: 40px;">Nenhum barbeiro ativo cadastrado.</p>';
-      return;
-    }
-
-    // Seletor de barbeiro
-    const barberSelector = `
+    // Criar seletor de barbearias e barbeiros
+    const selectorHTML = `
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="availability-barbershop-selector">Selecione a Barbearia:</label>
+        <select id="availability-barbershop-selector" class="form-control" style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; width: 100%;">
+          ${barbershopSlugs.map((slug) => `<option value="${slug}">${barbershops[slug].name}</option>`).join("")}
+        </select>
+      </div>
       <div class="form-group" style="margin-bottom: 20px;">
         <label for="barber-selector">Selecione o Barbeiro:</label>
-        <select id="barber-selector" class="form-control" style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px;">
-          ${barberList.map((barber) => `<option value="${barber.id}">${barber.name}</option>`).join("")}
+        <select id="barber-selector" class="form-control" style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; width: 100%;">
+          <option value="">Selecione uma barbearia primeiro...</option>
         </select>
       </div>
       <div id="barber-availability-content"></div>
     `;
 
-    container.innerHTML = barberSelector;
+    container.innerHTML = selectorHTML;
 
-    // Carregar configurações do primeiro barbeiro
-    loadBarberAvailability(barberList[0].id);
+    // Função para carregar barbeiros de uma barbearia específica
+    const loadBarbersForAvailability = (barbershopSlug) => {
+      const barberSelect = document.getElementById("barber-selector");
+      const barbershop = barbershops[barbershopSlug];
+      adminState.managedBarbershopId = barbershopSlug;
+
+      if (!barbershop) {
+        barberSelect.innerHTML =
+          '<option value="">Barbearia não encontrada</option>';
+        document.getElementById("barber-availability-content").innerHTML = "";
+        return;
+      }
+
+      const barbers = barbershop.barbers || {};
+      const barberList = Object.entries(barbers)
+        .filter(([_, data]) => data.active !== false)
+        .map(([id, data]) => ({ id, ...data }));
+
+      if (barberList.length === 0) {
+        barberSelect.innerHTML =
+          '<option value="">Nenhum barbeiro ativo nesta barbearia</option>';
+        document.getElementById("barber-availability-content").innerHTML =
+          '<p style="color: #64748b; text-align: center; padding: 40px;">Nenhum barbeiro ativo cadastrado nesta barbearia. Adicione um barbeiro primeiro na seção "Barbeiros".</p>';
+        return;
+      }
+
+      barberSelect.innerHTML = barberList
+        .map((barber) => `<option value="${barber.id}">${barber.name}</option>`)
+        .join("");
+
+      // Carregar disponibilidade do primeiro barbeiro
+      loadBarberAvailability(barberList[0].id);
+    };
+
+    // Carregar barbeiros da primeira barbearia
+    loadBarbersForAvailability(barbershopSlugs[0]);
+
+    // Event listener para mudança de barbearia
+    document
+      .getElementById("availability-barbershop-selector")
+      .addEventListener("change", (e) => {
+        loadBarbersForAvailability(e.target.value);
+      });
 
     // Event listener para mudança de barbeiro
     document
       .getElementById("barber-selector")
       .addEventListener("change", (e) => {
-        loadBarberAvailability(e.target.value);
+        if (e.target.value) {
+          loadBarberAvailability(e.target.value);
+        }
       });
   } catch (error) {
     console.error("Erro ao carregar configurações:", error);

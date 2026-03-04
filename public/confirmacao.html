@@ -1,158 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffd700" />
     <title>Agendamento Confirmado</title>
-    <link rel="stylesheet" href="../css/style.css" />
-    <style>
-        .success-page {
-            text-align: center;
-            padding: 40px 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .success-icon {
-            font-size: 4rem;
-            color: #25d366;
-            margin-bottom: 20px;
-        }
-        .success-title {
-            color: var(--text);
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        .success-message {
-            color: var(--text-light);
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-        }
-        .appointment-details {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: left;
-        }
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-        .detail-label {
-            font-weight: bold;
-            color: var(--text);
-        }
-        .detail-value {
-            color: var(--text-light);
-        }
-        .whatsapp-note {
-            background: rgba(37, 211, 102, 0.1);
-            border: 1px solid #25d366;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 20px 0;
-        }
-        .whatsapp-note h3 {
-            color: #25d366;
-            margin-bottom: 10px;
-        }
-        .back-btn {
-            background: var(--primary);
-            color: var(--bg);
-            padding: 12px 24px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .back-btn:hover {
-            background: #e6b800;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <main class="main">
-            <div class="success-page">
-                <div class="success-icon">✅</div>
-                <h1 class="success-title">Agendamento Confirmado!</h1>
-                <p class="success-message">
-                    Seu horário foi agendado com sucesso. Você receberá uma confirmação em breve.
-                </p>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="images/logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="bg-black text-yellow-400 min-h-screen flex items-start justify-center p-5 pt-10">
 
-                <div class="appointment-details" id="appointment-details">
-                    <!-- Detalhes serão preenchidos via JavaScript -->
-                </div>
+    <div x-data="confirmacaoPage()" class="max-w-2xl w-full">
 
-                <div class="whatsapp-note">
-                    <h3>📱 Confirmação via WhatsApp</h3>
-                    <p>Em breve você receberá uma mensagem de confirmação no WhatsApp com todos os detalhes do seu agendamento.</p>
-                </div>
+      <!-- Ícone + Título -->
+      <div class="text-center mb-8">
+        <div class="text-6xl mb-4">✅</div>
+        <h1 class="text-3xl font-bold text-yellow-400 mb-3">Agendamento Confirmado!</h1>
+        <p class="text-yellow-500 text-lg">
+          Seu horário foi agendado com sucesso.
+        </p>
+      </div>
 
-                <button class="back-btn" onclick="window.location.href='index.html'">
-                    Voltar ao Início
-                </button>
-            </div>
-        </main>
+      <!-- Detalhes do Agendamento -->
+      <div class="bg-zinc-900 rounded-xl border border-zinc-700 p-6 mb-6">
+        <h2 class="text-yellow-400 font-bold text-lg mb-4 pb-3 border-b border-zinc-700">📋 Detalhes do Agendamento</h2>
+        <template x-for="item in detalhes" :key="item.label">
+          <div class="flex justify-between items-center py-3 border-b border-zinc-800 last:border-0">
+            <span class="font-bold text-yellow-400" x-text="item.label + ':'"></span>
+            <span class="text-yellow-500 text-right" x-text="item.value"></span>
+          </div>
+        </template>
+      </div>
+
+      <!-- Nota WhatsApp -->
+      <div class="bg-green-950/50 border border-green-600 rounded-xl p-5 mb-8">
+        <h3 class="text-green-400 font-bold text-lg mb-2">📱 Confirmação via WhatsApp</h3>
+        <p class="text-green-300 text-sm">
+          Em breve você receberá uma mensagem de confirmação no WhatsApp com todos os detalhes do seu agendamento.
+        </p>
+      </div>
+
+      <!-- Botão Voltar -->
+      <button @click="window.location.href = 'index.html'"
+              class="w-full py-4 bg-yellow-400 text-black font-bold text-lg rounded-xl
+                     hover:bg-yellow-300 transition-all shadow-lg hover:-translate-y-0.5
+                     active:translate-y-0">
+        🏠 Voltar ao Início
+      </button>
+
     </div>
 
     <script>
-        // Recupera dados do agendamento do sessionStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            const appointmentData = JSON.parse(sessionStorage.getItem('lastAppointment'));
-
-            if (appointmentData) {
-                displayAppointmentDetails(appointmentData);
-                // Limpa os dados após exibir
-                sessionStorage.removeItem('lastAppointment');
-            } else {
-                // Dados não encontrados, redireciona para o início
-                window.location.href = 'index.html';
-            }
-        });
-
-        function displayAppointmentDetails(data) {
-            const detailsEl = document.getElementById('appointment-details');
-
-            detailsEl.innerHTML = `
-                <div class="detail-row">
-                    <span class="detail-label">Barbearia:</span>
-                    <span class="detail-value">${data.barbershopName}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Serviços:</span>
-                    <span class="detail-value">${data.services}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Barbeiro:</span>
-                    <span class="detail-value">${data.barberName}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Data:</span>
-                    <span class="detail-value">${data.date}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Horário:</span>
-                    <span class="detail-value">${data.time}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Duração:</span>
-                    <span class="detail-value">${data.duration}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Valor Total:</span>
-                    <span class="detail-value">${data.totalPrice}</span>
-                </div>
-            `;
+      window.confirmacaoPage = () => ({
+        detalhes: [],
+        init() {
+          const data = JSON.parse(sessionStorage.getItem('lastAppointment'));
+          if (!data) { window.location.href = 'index.html'; return; }
+          sessionStorage.removeItem('lastAppointment');
+          this.detalhes = [
+            { label: 'Barbearia',   value: data.barbershopName },
+            { label: 'Serviços',    value: data.services },
+            { label: 'Barbeiro',    value: data.barberName },
+            { label: 'Data',        value: data.date },
+            { label: 'Horário',     value: data.time },
+            { label: 'Duração',     value: data.duration },
+            { label: 'Valor Total', value: data.totalPrice },
+          ];
         }
+      });
     </script>
-</body>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"></script>
+
+  </body>
 </html></content>
 <parameter name="filePath">c:\Users\felip\OneDrive\Desktop\felipe\SAAS_BARBEARIA\public\confirmacao.html

@@ -3,40 +3,67 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#3b82f6" />
+    <meta name="theme-color" content="#ffd700" />
     <meta
       name="description"
       content="Painel administrativo do sistema de barbearias"
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Barbearia Admin" />
     <meta name="mobile-web-app-capable" content="yes" />
     <title>Painel Administrativo</title>
-    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css" />
     <link rel="manifest" href="manifest.json" />
-    <link rel="icon" href="../images/logo.png" />
-    <link rel="apple-touch-icon" href="../images/logo.png" />
+    <link rel="icon" href="images/logo.png" />
+    <link rel="apple-touch-icon" href="images/logo.png" />
   </head>
-  <body>
+  <body class="bg-black text-yellow-400">
     <div class="container">
       <!-- Tela de Login -->
       <div id="login-screen" class="admin-screen">
-        <div class="login-box">
-          <h1>🔐 Área Administrativa</h1>
-          <form id="login-form" class="admin-form">
-            <div class="form-group">
-              <label for="email">E-mail</label>
-              <input type="email" id="email" required />
+        <div
+          class="bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl w-full max-w-sm p-8"
+        >
+          <h1 class="text-2xl font-bold text-yellow-400 text-center mb-8">
+            🔐 Área Administrativa
+          </h1>
+          <form id="login-form" class="flex flex-col gap-5">
+            <div class="flex flex-col gap-2">
+              <label for="email" class="font-bold text-yellow-400 text-sm"
+                >E-mail</label
+              >
+              <input
+                type="email"
+                id="email"
+                required
+                class="px-4 py-3 bg-black border-2 border-zinc-700 rounded-lg text-yellow-400 focus:outline-none focus:border-yellow-400 transition-colors"
+              />
             </div>
-            <div class="form-group">
-              <label for="password">Senha</label>
-              <input type="password" id="password" required />
+            <div class="flex flex-col gap-2">
+              <label for="password" class="font-bold text-yellow-400 text-sm"
+                >Senha</label
+              >
+              <input
+                type="password"
+                id="password"
+                required
+                class="px-4 py-3 bg-black border-2 border-zinc-700 rounded-lg text-yellow-400 focus:outline-none focus:border-yellow-400 transition-colors"
+              />
             </div>
-            <button type="submit" class="btn btn-primary">Entrar</button>
+            <button
+              type="submit"
+              class="py-3 bg-yellow-400 text-black font-bold rounded-xl hover:bg-yellow-300 transition-all"
+            >
+              Entrar
+            </button>
             <div id="login-error" class="error-message"></div>
           </form>
-          <a href="index.html" class="back-link">← Voltar ao início</a>
+          <a
+            href="index.html"
+            class="block text-center mt-6 text-yellow-600 hover:text-yellow-400 text-sm transition-colors"
+          >
+            ← Voltar ao início
+          </a>
         </div>
       </div>
 
@@ -47,7 +74,12 @@
             <h1>Painel Administrativo</h1>
             <p id="user-info"></p>
           </div>
-          <button id="logout-btn" class="btn btn-secondary">Sair</button>
+          <button
+            id="logout-btn"
+            class="px-4 py-2 bg-zinc-800 text-yellow-400 border border-zinc-600 rounded-lg hover:bg-zinc-700 hover:border-yellow-400 transition-all text-sm font-bold"
+          >
+            Sair
+          </button>
         </header>
 
         <div class="admin-content">
@@ -88,13 +120,7 @@
                 <div style="display: flex; gap: 15px; align-items: center">
                   <select
                     id="agenda-barbershop"
-                    style="
-                      padding: 10px;
-                      border: 1px solid #cbd5e1;
-                      border-radius: 8px;
-                      font-size: 14px;
-                      min-width: 200px;
-                    "
+                    class="px-3 py-2 bg-black border border-zinc-600 rounded-lg text-yellow-400 focus:outline-none focus:border-yellow-400 text-sm"
                   >
                     <option value="">Todas as barbearias</option>
                   </select>
@@ -152,25 +178,13 @@
                 <div style="display: flex; gap: 15px; align-items: center">
                   <select
                     id="financial-barbershop"
-                    style="
-                      padding: 10px;
-                      border: 1px solid #cbd5e1;
-                      border-radius: 8px;
-                      font-size: 14px;
-                      min-width: 200px;
-                    "
+                    class="px-3 py-2 bg-black border border-zinc-600 rounded-lg text-yellow-400 focus:outline-none focus:border-yellow-400 text-sm"
                   >
                     <option value="">Todas as barbearias</option>
                   </select>
                   <select
                     id="financial-period"
-                    style="
-                      padding: 10px;
-                      border: 1px solid #cbd5e1;
-                      border-radius: 8px;
-                      font-size: 14px;
-                      min-width: 150px;
-                    "
+                    class="px-3 py-2 bg-black border border-zinc-600 rounded-lg text-yellow-400 focus:outline-none focus:border-yellow-400 text-sm"
                   >
                     <option value="today">Hoje</option>
                     <option value="week">Esta Semana</option>
@@ -209,7 +223,7 @@
     </div>
 
     <script type="module">
-      import { initAdminPage } from "../js/admin.js";
+      import { initAdminPage } from "./js/admin.js";
 
       document.addEventListener("DOMContentLoaded", () => {
         initAdminPage();
